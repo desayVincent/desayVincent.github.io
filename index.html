@@ -127,12 +127,14 @@
         </a>
       </div>
       <div class="site-state-item site-state-categories">
+          <a href="/categories/">
         <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">分类</span>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
+          <a href="/tags/">
         <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -169,7 +171,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/07/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -187,7 +189,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/07/hello-world/" class="post-title-link" itemprop="url">如何使用Hexo + Next + github pages搭建个人博客</a>
+          <a href="/2024/10/07/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">如何使用Hexo + Next + github pages搭建个人博客</a>
         </h2>
 
         <div class="post-meta-container">
@@ -205,7 +207,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-10-08 05:58:50" itemprop="dateModified" datetime="2024-10-08T05:58:50-07:00">2024-10-08</time>
+      <time title="修改时间：2024-10-08 06:26:37" itemprop="dateModified" datetime="2024-10-08T06:26:37-07:00">2024-10-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -315,7 +317,22 @@
 <li><p>node v18.19.0</p>
 </li>
 </ul>
-<h3 id="Step1：创建-github-账号和-github-io-仓库"><a href="#Step1：创建-github-账号和-github-io-仓库" class="headerlink" title="Step1：创建 github 账号和 .github.io 仓库"></a>Step1：创建 github 账号和 <username>.github.io 仓库</h3><h3 id="Step2：安装-Hexo"><a href="#Step2：安装-Hexo" class="headerlink" title="Step2：安装 Hexo"></a>Step2：安装 Hexo</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<h3 id="Step1：创建-github-账号和-github-io-仓库"><a href="#Step1：创建-github-账号和-github-io-仓库" class="headerlink" title="Step1：创建 github 账号和 .github.io 仓库"></a>Step1：创建 github 账号和 <username>.github.io 仓库</h3><ol>
+<li><p>创建 GitHub 账号:</p>
+<p>如果您还没有 GitHub 账号，需要先在 GitHub 官网 (<a target="_blank" rel="noopener" href="https://github.com/">https://github.com/</a>) 注册一个账号。</p>
+</li>
+<li><p>创建 <username>.github.io 仓库:</p>
+<ul>
+<li>登录您的 GitHub 账号</li>
+<li>点击右上角的 “+” 图标，选择 “New repository”</li>
+<li>在 “Repository name” 框中，输入 “<username>.github.io”</li>
+<li>(将 <username> 替换为您的 GitHub 用户名，例如：如果您的用户名是 johndoe，则输入 johndoe.github.io)</li>
+<li>选择 “Public” 选项</li>
+<li>点击 “Create repository” 按钮</li>
+</ul>
+</li>
+</ol>
+<h3 id="Step2：安装-Hexo"><a href="#Step2：安装-Hexo" class="headerlink" title="Step2：安装 Hexo"></a>Step2：安装 Hexo</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
 
 <p>如果下载比较慢，可以指定国内淘宝源</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br><span class="line">npm config get registry</span><br></pre></td></tr></table></figure>
@@ -327,7 +344,14 @@
 <h3 id="Step5：配置-Hexo"><a href="#Step5：配置-Hexo" class="headerlink" title="Step5：配置 Hexo"></a>Step5：配置 Hexo</h3><p>编辑myblog根目录下的 _config.yml 文件，修改主题设置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
 
-<h3 id="Step6：配置-Next-主题："><a href="#Step6：配置-Next-主题：" class="headerlink" title="Step6：配置 Next 主题："></a>Step6：配置 Next 主题：</h3><p>编辑 themes&#x2F;next&#x2F;_config.yml 文件，根据需要修改主题设置</p>
+<h3 id="Step6：配置-Next-主题："><a href="#Step6：配置-Next-主题：" class="headerlink" title="Step6：配置 Next 主题："></a>Step6：配置 Next 主题：</h3><p>编辑 themes&#x2F;next&#x2F;_config.yml 文件，根据需要修改主题设置，在主题配置文件中启用相应的侧边栏部件可以如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sidebar:</span><br><span class="line">  display: post</span><br><span class="line">  position: left</span><br><span class="line">  widgets:</span><br><span class="line">    - category</span><br><span class="line">    - tag</span><br><span class="line">    - archive</span><br></pre></td></tr></table></figure>
+
+<p>启用分类和标签菜单</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: / || fa fa-home</span><br><span class="line">  categories: /categories/ || fa fa-th</span><br><span class="line">  tags: /tags/ || fa fa-tags</span><br><span class="line">  archives: /archives/ || fa fa-archive</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="Step7：生成静态文件"><a href="#Step7：生成静态文件" class="headerlink" title="Step7：生成静态文件"></a>Step7：生成静态文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp; hexo generate</span><br></pre></td></tr></table></figure>
 
 <h3 id="Step8：本地预览"><a href="#Step8：本地预览" class="headerlink" title="Step8：本地预览"></a>Step8：本地预览</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
@@ -343,8 +367,55 @@
 <h3 id="Step9：创建分类页面和标签页面"><a href="#Step9：创建分类页面和标签页面" class="headerlink" title="Step9：创建分类页面和标签页面"></a>Step9：创建分类页面和标签页面</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo new page categories</span><br><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
 
 <p>会生成source&#x2F;categories&#x2F;index.md和source&#x2F;tags&#x2F;index.md文件</p>
-<h3 id="Step9：添加博客内容"><a href="#Step9：添加博客内容" class="headerlink" title="Step9：添加博客内容"></a>Step9：添加博客内容</h3><p>将写好的 Markdown 放到 source_posts 目录</p>
-<h3 id="Step10：添加博客内容"><a href="#Step10：添加博客内容" class="headerlink" title="Step10：添加博客内容"></a>Step10：添加博客内容</h3>
+<p>categories的index.md内容添加type如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: 标签</span><br><span class="line">date: 2024-10-08 04:47:31</span><br><span class="line">type: &quot;tags&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: 分类</span><br><span class="line">date: 2024-10-08 04:47:30</span><br><span class="line">type: &quot;categories&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step10：添加博客内容"><a href="#Step10：添加博客内容" class="headerlink" title="Step10：添加博客内容"></a>Step10：添加博客内容</h3><p>将写好的 Markdown 放到 source_posts 目录，其中在每篇文章的头部添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">title: 文章标题</span><br><span class="line">categories:</span><br><span class="line">  - 分类1</span><br><span class="line">  - 分类2</span><br><span class="line">tags:</span><br><span class="line">  - 标签1</span><br><span class="line">  - 标签2</span><br></pre></td></tr></table></figure>
+
+<p>如果有子分类修改成如下的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  - [父分类, 子分类]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step11：部署"><a href="#Step11：部署" class="headerlink" title="Step11：部署"></a>Step11：部署</h3><ol>
+<li><p>生成个人访问令牌（Personal Access Token）：</p>
+<ul>
+<li>登录到 GitHub</li>
+<li>点击右上角的头像，然后选择 “Settings”</li>
+<li>在左侧菜单中，选择 “Developer settings”</li>
+<li>点击 “Personal access tokens”，然后选择 “Tokens (classic)”</li>
+<li>点击 “Generate new token”，然后选择 “Generate new token (classic)”</li>
+<li>给令牌一个描述性的名称</li>
+<li>选择令牌的有效期</li>
+<li>在 “Select scopes” 下，至少选中 “repo” 选项</li>
+<li>点击 “Generate token”</li>
+<li>复制生成的令牌（注意：这是您唯一能够看到令牌的机会，请务必保存）</li>
+</ul>
+</li>
+<li><p>使用个人访问令牌：</p>
+<ul>
+<li><p>在您的 Hexo 项目根目录中，编辑 _config.yml 文件</p>
+</li>
+<li><p>找到 deploy 部分，修改如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: https://YOUR-USERNAME:YOUR-TOKEN@github.com/desayVincent/desayVincent.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 YOUR-USERNAME 替换为您的 GitHub 用户名</p>
+</li>
+<li><p>将 YOUR-TOKEN 替换为您刚刚生成的个人访问令牌</p>
+</li>
+</ul>
+</li>
+<li><p>重新部署：</p>
+<ul>
+<li>保存 _config.yml 文件</li>
+<li>运行 hexo clean &amp;&amp; hexo generate &amp;&amp; hexo deploy</li>
+<li>这样应该就能解决认证问题，成功部署您的 Hexo 博客到 GitHub Pages</li>
+<li>记住，个人访问令牌就像密码一样重要，请妥善保管，不要分享给他人。如果您怀疑令牌被泄露，请立即在 GitHub 上撤销并生成新的令牌。</li>
+</ul>
+</li>
+</ol>
+
       
     </div>
 
