@@ -122,18 +122,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -162,6 +162,144 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/08/J6%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="desayVincent">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Desayvincent技术博客">
+      <meta itemprop="description" content="记录我的技术旅程和见解">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Desayvincent技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/10/08/J6%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">地平线J6时间同步方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-08 19:38:51 / 修改时间：23:52:57" itemprop="dateCreated datePublished" datetime="2024-10-08T19:38:51-07:00">2024-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">域控制器</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8/J6/" itemprop="url" rel="index"><span itemprop="name">J6</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="名词缩写"><a href="#名词缩写" class="headerlink" title="名词缩写"></a>名词缩写</h2><table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTC</td>
+<td>Real_Time Clock</td>
+</tr>
+<tr>
+<td>PHC</td>
+<td>Precision hardware clock</td>
+</tr>
+<tr>
+<td>PTP</td>
+<td>Precision time protocol</td>
+</tr>
+<tr>
+<td>gPTP</td>
+<td>precision time protocol, extension of PTP Protocol</td>
+</tr>
+<tr>
+<td>PPS</td>
+<td>Pulse Per Second</td>
+</tr>
+<tr>
+<td>GPT</td>
+<td>General Purpose Timer</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>Network Time Protocol</td>
+</tr>
+</tbody></table>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>现代自动驾驶系统高度依赖精确的时间同步机制。在典型的域控制器架构中，系统集成了多类环境感知传感器，包括激光雷达、毫米波雷达组、高清摄像头等。这些传感器产生的数据流从采集、处理到最终传输至域控制器的全流程，都对时间同步提出了严格要求。尤其在域控制器采用异构计算架构的情况下，确保各个处理单元之间的精确时间同步更是至关重要，这直接关系到自动驾驶系统的感知精度和控制可靠性。</p>
+<p>要解释时钟同步，首先要了解如下2个概念：</p>
+<ul>
+<li><p><strong>数据面时间同步</strong></p>
+<p>数据面时间同步主要关注实时数据流的时间一致性，确保来自不同传感器和系统组件的数据能够在同一时间基准下被正确解释和融合，作用是：</p>
+<ol>
+<li>确保多传感器数据(如激光雷达、摄像头、毫米波雷达等)的时间对齐，为后续的传感器融合提供基础</li>
+<li>支持高精度定位和导航,通过同步GPS&#x2F;GNSS时间与车载系统时间</li>
+</ol>
+</li>
+<li><p><strong>管理面时间同步</strong></p>
+<p>管理面时间同步主要关注系统整体的时间管理，作用是：</p>
+<ol>
+<li>系统日志管理: 为系统日志提供准确的时间戳,便于故障诊断和系统监控</li>
+<li>数据上传与云端同步: 确保上传到云端的数据具有正确的时间信息,便于数据分析和远程监控</li>
+<li>选择和维护系统主时钟源(如GNSS接收机)，为整个系统提供统一的时间基准</li>
+</ol>
+</li>
+</ul>
+<h2 id="J6时间同步"><a href="#J6时间同步" class="headerlink" title="J6时间同步"></a>J6时间同步</h2><p><img src="/home/ubuntu/work/workspace2/githubPages/blog/source/_posts/%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5.drawio.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
