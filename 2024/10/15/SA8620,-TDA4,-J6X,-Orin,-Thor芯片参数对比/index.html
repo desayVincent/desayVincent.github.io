@@ -19,36 +19,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"desayvincent.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"widgets":["category","tag","archive"]},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="CN芯片媒体处理系统一些功能介绍，每个芯片公司的媒体处理系统基本类似，可以更加理解J6的媒体处理系统">
+    <meta name="description" content="SA8620, TDA4, J6X, Orin, Thor芯片算力对比">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CN芯片媒体处理系统">
-<meta property="og:url" content="https://desayvincent.github.io/2024/10/10/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:title" content="SA8620, TDA4, J6X, Orin, Thor芯片参数对比">
+<meta property="og:url" content="https://desayvincent.github.io/2024/10/15/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/index.html">
 <meta property="og:site_name" content="Desayvincent技术博客">
-<meta property="og:description" content="CN芯片媒体处理系统一些功能介绍，每个芯片公司的媒体处理系统基本类似，可以更加理解J6的媒体处理系统">
+<meta property="og:description" content="SA8620, TDA4, J6X, Orin, Thor芯片算力对比">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVI.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVPPS.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVPPS_2.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVENC.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVDEC.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVGPU.png">
-<meta property="og:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNGDC.png">
-<meta property="article:published_time" content="2024-10-10T11:56:48.509Z">
-<meta property="article:modified_time" content="2024-10-10T12:22:46.335Z">
+<meta property="og:image" content="https://desayvincent.github.io/images/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0.png">
+<meta property="article:published_time" content="2024-10-15T08:30:04.044Z">
+<meta property="article:modified_time" content="2024-10-15T08:46:31.000Z">
 <meta property="article:author" content="desayVincent">
 <meta property="article:tag" content="J6">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://desayvincent.github.io/images/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/CNVI.png">
+<meta name="twitter:image" content="https://desayvincent.github.io/images/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0.png">
 
 
-<link rel="canonical" href="https://desayvincent.github.io/2024/10/10/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/">
+<link rel="canonical" href="https://desayvincent.github.io/2024/10/15/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://desayvincent.github.io/2024/10/10/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/","path":"2024/10/10/CN芯片媒体处理系统/","title":"CN芯片媒体处理系统"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://desayvincent.github.io/2024/10/15/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/","path":"2024/10/15/SA8620,-TDA4,-J6X,-Orin,-Thor芯片参数对比/","title":"SA8620, TDA4, J6X, Orin, Thor芯片参数对比"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CN芯片媒体处理系统 | Desayvincent技术博客</title>
+<title>SA8620, TDA4, J6X, Orin, Thor芯片参数对比 | Desayvincent技术博客</title>
   
 
 
@@ -121,7 +115,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CNVI"><span class="nav-number">1.</span> <span class="nav-text">CNVI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CNVO"><span class="nav-number">1.1.</span> <span class="nav-text">CNVO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNVPPS"><span class="nav-number">1.2.</span> <span class="nav-text">CNVPPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNVENC"><span class="nav-number">1.3.</span> <span class="nav-text">CNVENC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNVDEC"><span class="nav-number">1.4.</span> <span class="nav-text">CNVDEC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNRGN"><span class="nav-number">1.5.</span> <span class="nav-text">CNRGN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNVGU"><span class="nav-number">1.6.</span> <span class="nav-text">CNVGU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNGDC"><span class="nav-number">1.7.</span> <span class="nav-text">CNGDC</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%AF%E7%89%87%E5%85%B3%E9%94%AE%E8%A7%84%E6%A0%BC%E5%8F%8A%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="nav-number">1.</span> <span class="nav-text">芯片关键规格及系统方案对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#J6P%E4%B8%8EThor-U%E7%9A%84%E9%AB%98%E7%AB%AF%E5%AF%B9%E6%AF%94"><span class="nav-number">1.1.</span> <span class="nav-text">J6P与Thor-U的高端对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%8A%AF%E7%89%87%E7%BB%BC%E5%90%88%E6%AF%94%E8%BE%83"><span class="nav-number">1.2.</span> <span class="nav-text">其他芯片综合比较</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -184,7 +178,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/10/CN%E8%8A%AF%E7%89%87%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/">
+    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/15/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -197,12 +191,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="CN芯片媒体处理系统 | Desayvincent技术博客">
-      <meta itemprop="description" content="CN芯片媒体处理系统一些功能介绍，每个芯片公司的媒体处理系统基本类似，可以更加理解J6的媒体处理系统">
+      <meta itemprop="name" content="SA8620, TDA4, J6X, Orin, Thor芯片参数对比 | Desayvincent技术博客">
+      <meta itemprop="description" content="SA8620, TDA4, J6X, Orin, Thor芯片算力对比">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          CN芯片媒体处理系统
+          SA8620, TDA4, J6X, Orin, Thor芯片参数对比
         </h1>
 
         <div class="post-meta-container">
@@ -214,7 +208,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-10-10 19:56:48 / 修改时间：20:22:46" itemprop="dateCreated datePublished" datetime="2024-10-10T19:56:48+08:00">2024-10-10</time>
+      <time title="创建时间：2024-10-15 16:30:04 / 修改时间：16:46:31" itemprop="dateCreated datePublished" datetime="2024-10-15T16:30:04+08:00">2024-10-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +220,7 @@
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8/%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">媒体处理系统</span></a>
+          <a href="/categories/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8/%E8%8A%AF%E7%89%87/" itemprop="url" rel="index"><span itemprop="name">芯片</span></a>
         </span>
     </span>
 
@@ -240,56 +234,70 @@
     </span>
 </div>
 
-            <div class="post-description">CN芯片媒体处理系统一些功能介绍，每个芯片公司的媒体处理系统基本类似，可以更加理解J6的媒体处理系统</div>
+            <div class="post-description">SA8620, TDA4, J6X, Orin, Thor芯片算力对比</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="CNVI"><a href="#CNVI" class="headerlink" title="CNVI"></a>CNVI</h2><p> VI（Video Input，视频输入）模块，支持通过MIPI Rx（MIPI 接口）采集视频数据<br> VI在软件层次上分为输入设备、输入PIPE（包含物理PIPE和虚拟PIPE）、物理通道（PHY_CHN）和扩展通道（EXT_CHN）4个部分，如下图所示:</p>
-<img src="/images/CN芯片媒体处理系统/CNVI.png" style="zoom:150%;">
+    <div class="post-body" itemprop="articleBody"><h3 id="芯片关键规格及系统方案对比"><a href="#芯片关键规格及系统方案对比" class="headerlink" title="芯片关键规格及系统方案对比"></a>芯片关键规格及系统方案对比</h3><p><img src="/images/SA8620,-TDA4,-J6X,-Orin,-Thor%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94/%E8%8A%AF%E7%89%87%E5%8F%82%E6%95%B0.png"></p>
+<h4 id="J6P与Thor-U的高端对比"><a href="#J6P与Thor-U的高端对比" class="headerlink" title="J6P与Thor-U的高端对比"></a>J6P与Thor-U的高端对比</h4><p>J6P和Thor-U作为高端芯片，在多个方面展现出卓越性能：</p>
+<ol>
+<li><p><strong>CPU性能：</strong></p>
+<ul>
+<li><p>J6P: 18核A78AE，DMIPS达420k</p>
+</li>
+<li><p>Thor-U: 14核Poseidon，DMIPS高达600k</p>
+</li>
+</ul>
+<p>Thor-U在CPU性能上略胜一筹，尤其是在DMIPS指标上.</p>
+</li>
+<li><p><strong>AI计算能力：</strong></p>
+<p>J6P: 560 TOPS</p>
+<p>Thor-U: 600 TOPS</p>
+<p>两者在AI计算能力上旗鼓相当，Thor-U略微领先.</p>
+</li>
+<li><p><strong>内存规格：</strong></p>
+<p>J6P: 256bits LPDDR5，带宽205GB&#x2F;s</p>
+<p>Thor-U: 273bits LPDDR5，带宽273GB&#x2F;s</p>
+<p>Thor-U在内存带宽上具有明显优势.</p>
+</li>
+<li><p><strong>ISP性能：</strong></p>
+<p>J6P: 5.3 Gpixel&#x2F;s</p>
+<p>Thor-U: 3.5 Gpixel&#x2F;s</p>
+<p>J6P在图像处理速度上占据上风.</p>
+</li>
+<li><p>视频输入：</p>
+<p>J6P: 支持6个MIPI-CSI RX接口</p>
+<p>Thor-U: 支持4个MIPI-CSI RX接口</p>
+<p>J6P提供更多的摄像头连接选项.</p>
+</li>
+<li><p>功耗：</p>
+<p>J6P: 120W</p>
+<p>Thor-U: 75W</p>
+<p>Thor-U在保持高性能的同时，功耗明显低于J6P.</p>
+</li>
+</ol>
+<h4 id="其他芯片综合比较"><a href="#其他芯片综合比较" class="headerlink" title="其他芯片综合比较"></a>其他芯片综合比较</h4><ol>
+<li><p>CPU性能：</p>
+<p>除J6P和Thor-U外，J6H的14核A78AE和Orin-X的12核A78AE也表现出色，DMIPS分别为320k和228k.</p>
+</li>
+<li><p>AI计算能力：</p>
+<p>Orin-X虽然发布较早（2020年），但仍保持254 TOPS的竞争力。J6H紧随其后，达到420 TOPS.</p>
+</li>
+<li><p>内存规格：</p>
+<p>大多数芯片采用LPDDR5内存，但带宽差异显著。Orin-X达到205GB&#x2F;s，J6H为152GB&#x2F;s.</p>
+</li>
+<li><p>ISP性能：</p>
+<p>J6H以4 Gpixel&#x2F;s的处理速度位居第三，显示出强劲的图像处理能力.</p>
+</li>
+<li><p>功耗：</p>
+<p>功耗范围从20W（J6E和SA8620）到105W（Orin-X）不等，反映了性能和功耗之间的权衡.</p>
+</li>
+</ol>
+<p><strong>总结来说，J6P和Thor-U在高端市场展现出卓越性能，各有优势。其他芯片如J6H和Orin-X也在特定领域表现出色，为不同应用场景提供了多样化的选择。选择最适合的芯片需要根据具体应用需求、性能要求和功耗限制等因素综合考虑。</strong></p>
 
-<h3 id="CNVO"><a href="#CNVO" class="headerlink" title="CNVO"></a>CNVO</h3><p> VO（Video Output，视频输出）模块从内存读取视频数据和图形数据进行叠加，并进行图像后处理，最终通过相应的显示设备输出，支持的显示设备、视频层、图形层情况参见下表：</p>
-<table>
-<thead>
-<tr>
-<th>设备</th>
-<th>名称</th>
-<th>描述</th>
-<th>输出接口</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>高清显示设备DHD0</td>
-<td>视频层VHD0<br>视频层VHD1<br>图形层G0<br>图形层G1</td>
-<td>最多支持16画面</td>
-<td>HDMI、MIPI Tx、BT.656、<br>BT.1120、RGB565</td>
-</tr>
-<tr>
-<td>高清显示设备DHD1</td>
-<td>视频层VHD2<br>视频层VHD3<br>图形层G2<br>图形层G3</td>
-<td>最多支持16画面</td>
-<td>MIPI Tx、BT.1120、BT.656、<br>RGB565</td>
-</tr>
-</tbody></table>
-<h3 id="CNVPPS"><a href="#CNVPPS" class="headerlink" title="CNVPPS"></a>CNVPPS</h3><p>VPPS（Video Post Process SubSystem，视频处理子系统）支持以下图像处理功能：</p>
-<img src="/images/CN芯片媒体处理系统/CNVPPS.png" style="zoom:50%;">
-
-<img src="/images/CN芯片媒体处理系统/CNVPPS_2.png" style="zoom: 67%;">
-
-<h3 id="CNVENC"><a href="#CNVENC" class="headerlink" title="CNVENC"></a>CNVENC</h3><p>VENC（Video Encoder，视频编码）模块，支持H.264&#x2F;H.265&#x2F;JPEG&#x2F;MJPEG编码协议</p>
-<img src="/images/CN芯片媒体处理系统/CNVENC.png" style="zoom: 67%;">
-
-<h3 id="CNVDEC"><a href="#CNVDEC" class="headerlink" title="CNVDEC"></a>CNVDEC</h3><p>VDEC（Video Decoder，视频解码）模块，包含H.264&#x2F;H.265&#x2F;JPEG&#x2F;MJPEG协议解码</p>
-<img src="/images/CN芯片媒体处理系统/CNVDEC.png" style="zoom:67%;">
-
-<h3 id="CNRGN"><a href="#CNRGN" class="headerlink" title="CNRGN"></a>CNRGN</h3><p>用户经常需要叠加OSD（On Screen Display，同屏显示）用于显示视频信息（例如通道号、时间戳等），或者在视频中填充遮挡的色块。这些叠加在视频上的OSD和遮挡在视频上的色块统称为区域；Region模块用于统一管理这些区域资源，实现区域资源创建、修改、查找、销毁等功能。</p>
-<h3 id="CNVGU"><a href="#CNVGU" class="headerlink" title="CNVGU"></a>CNVGU</h3><p>.VGU（Video Graphics Unit，视频图形单元）实现以下图像处理功能：</p>
-<img src="/images/CN芯片媒体处理系统/CNVGPU.png" style="zoom: 50%;">
-
-<h3 id="CNGDC"><a href="#CNGDC" class="headerlink" title="CNGDC"></a>CNGDC</h3><p>GDC（Geometric Distortion Correction，几何畸变矫正）子系统实现以下图像处理功能：</p>
-<img src="/images/CN芯片媒体处理系统/CNGDC.png" style="zoom: 50%;">
     </div>
 
     
@@ -305,14 +313,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/10/10/%E5%8F%8CJ6%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88%20/" rel="prev" title="地平线双J6时间同步方案">
-                  <i class="fa fa-angle-left"></i> 地平线双J6时间同步方案
+                <a href="/2024/10/10/SOA%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="prev" title="SOA架构设计">
+                  <i class="fa fa-angle-left"></i> SOA架构设计
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/10/10/SOA%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="next" title="SOA架构设计">
-                  SOA架构设计 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
