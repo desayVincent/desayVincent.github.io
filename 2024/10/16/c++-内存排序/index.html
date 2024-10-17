@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic%7CPoppins:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"desayvincent.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"widgets":["category","tag","archive"]},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="为了解决内存排序，C++引入了内存顺序选项（如std::memory_order_relaxed、std::memory_order_acquire、std::memory_order_release等）。这些选项允许程序员精确控制内存操作的顺序，在保证程序正确性的同时，还能够在某些情况下提高性能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++ 内存排序">
+<meta property="og:url" content="https://desayvincent.github.io/2024/10/16/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:site_name" content="Desayvincent技术博客">
+<meta property="og:description" content="为了解决内存排序，C++引入了内存顺序选项（如std::memory_order_relaxed、std::memory_order_acquire、std::memory_order_release等）。这些选项允许程序员精确控制内存操作的顺序，在保证程序正确性的同时，还能够在某些情况下提高性能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://desayvincent.github.io/images/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F.png">
+<meta property="article:published_time" content="2024-10-16T11:12:05.060Z">
+<meta property="article:modified_time" content="2024-10-17T02:23:21.787Z">
+<meta property="article:author" content="desayVincent">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://desayvincent.github.io/images/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F.png">
+
+
+<link rel="canonical" href="https://desayvincent.github.io/2024/10/16/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://desayvincent.github.io/2024/10/16/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/","path":"2024/10/16/c++-内存排序/","title":"c++ 内存排序"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>c++ 内存排序 | Desayvincent技术博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Desayvincent技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享知识和经验</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.</span> <span class="nav-text">产生内存顺序的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">内存顺序的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sequentially-consistent-ordering"><span class="nav-number">2.1.</span> <span class="nav-text">Sequentially-consistent ordering</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Release-Acquire-ordering"><span class="nav-number">2.2.</span> <span class="nav-text">Release-Acquire ordering</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Relaxed-ordering"><span class="nav-number">2.3.</span> <span class="nav-text">Relaxed ordering</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#memory-order-relaxed"><span class="nav-number">3.1.</span> <span class="nav-text">memory_order_relaxed</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memory-order-acquire-memory-order-release"><span class="nav-number">3.2.</span> <span class="nav-text">memory_order_acquire &amp; memory_order_release</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E9%9D%9E%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F"><span class="nav-number">3.2.1.</span> <span class="nav-text">用于非原子变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E4%BA%8Ememory-order-relaxed"><span class="nav-number">3.2.2.</span> <span class="nav-text">用于memory_order_relaxed</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memory-order-acq-rel"><span class="nav-number">3.3.</span> <span class="nav-text">memory_order_acq_rel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memory-order-seq-cst"><span class="nav-number">3.4.</span> <span class="nav-text">memory_order_seq_cst</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#c-%E9%BB%98%E8%AE%A4%E7%9A%84%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F"><span class="nav-number">3.5.</span> <span class="nav-text">c++默认的内存排序</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">desayVincent</p>
+  <div class="site-description" itemprop="description">记录我的技术旅程和见解</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/desayVincent" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;desayVincent" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:desay.vincent@gmail.com" title="E-Mail → mailto:desay.vincent@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://desayvincent.github.io/2024/10/16/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="desayVincent">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Desayvincent技术博客">
+      <meta itemprop="description" content="记录我的技术旅程和见解">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="c++ 内存排序 | Desayvincent技术博客">
+      <meta itemprop="description" content="为了解决内存排序，C++引入了内存顺序选项（如std::memory_order_relaxed、std::memory_order_acquire、std::memory_order_release等）。这些选项允许程序员精确控制内存操作的顺序，在保证程序正确性的同时，还能够在某些情况下提高性能。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          c++ 内存排序
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-10-16 19:12:05" itemprop="dateCreated datePublished" datetime="2024-10-16T19:12:05+08:00">2024-10-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-10-17 10:23:21" itemprop="dateModified" datetime="2024-10-17T10:23:21+08:00">2024-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-C/" itemprop="url" rel="index"><span itemprop="name">C/C++</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">为了解决内存排序，C++引入了内存顺序选项（如std::memory_order_relaxed、std::memory_order_acquire、std::memory_order_release等）。这些选项允许程序员精确控制内存操作的顺序，在保证程序正确性的同时，还能够在某些情况下提高性能。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="产生内存顺序的原因"><a href="#产生内存顺序的原因" class="headerlink" title="产生内存顺序的原因"></a>产生内存顺序的原因</h3><ol>
+<li><p><strong>处理器乱序执行：</strong></p>
+<p>现代CPU为了提高性能，会对指令进行乱序执行。例如，可能会先执行后面的内存读取，而不是按程序顺序执行。这在单线程中通常不会有问题，但在多线程环境下可能导致意外行为。</p>
+</li>
+<li><p><strong>编译器优化：</strong></p>
+<p>编译器可能会重排指令顺序以提高性能。例如，可能会将看似无关的操作重新排序，这在多线程环境中可能导致问题。</p>
+</li>
+<li><p><strong>缓存一致性：</strong></p>
+<p>在多核系统中，每个核心都有自己的缓存。当一个核心修改了内存中的值，其他核心可能不会立即看到这个修改，因为它们可能仍在使用自己缓存中的旧值。</p>
+</li>
+<li><p><strong>存储缓冲区：</strong></p>
+<p>处理器可能会将写操作暂存在存储缓冲区中，而不是立即写入主内存。这可能导致其他处理器看到写操作的顺序与程序中的顺序不同。</p>
+</li>
+<li><p><strong>多级内存架构：</strong></p>
+<p>现代计算机使用多级内存架构（如L1、L2、L3缓存和主内存），不同级别的内存访问速度不同，这可能导致内存操作的可见性问题。</p>
+</li>
+</ol>
+<h3 id="内存顺序的类型"><a href="#内存顺序的类型" class="headerlink" title="内存顺序的类型"></a>内存顺序的类型</h3><p><img src="/images/c++-%E5%86%85%E5%AD%98%E6%8E%92%E5%BA%8F/%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F.png"></p>
+<p><strong>1.memory_order_relaxed</strong></p>
+<ul>
+<li>最宽松的内存序，只保证原子性，不提供同步或顺序保证。</li>
+<li>适用于计数器等简单场景，性能最好。</li>
+</ul>
+<p><strong>2.memory_order_acquire</strong></p>
+<ul>
+<li>用于读操作，保证当前读取之后的内存访问不会被重排到这个操作之前。</li>
+<li>通常与memory_order_release配对使用。</li>
+</ul>
+<p><strong>3.memory_order_release</strong></p>
+<ul>
+<li>用于写操作，保证当前写入之前的内存访问不会被重排到这个操作之后。</li>
+<li>通常与memory_order_acquire配对使用。</li>
+</ul>
+<p><strong>4.memory_order_acq_rel</strong></p>
+<ul>
+<li>结合了acquire和release语义，用于读-修改-写操作。</li>
+</ul>
+<p><strong>5.memory_order_seq_cst</strong></p>
+<ul>
+<li>最严格的内存序，提供全局的顺序一致性。</li>
+<li>性能开销最大，但最容易理解和使用。</li>
+</ul>
+<p><strong>6.memory_order_consume</strong></p>
+<ul>
+<li>类似于acquire，但只对依赖于加载值的操作提供顺序保证。</li>
+<li>在实践中较少使用，因为实现复杂且效果不明显。</li>
+</ul>
+<h4 id="Sequentially-consistent-ordering"><a href="#Sequentially-consistent-ordering" class="headerlink" title="Sequentially-consistent ordering"></a>Sequentially-consistent ordering</h4><p>顺序一致性是最强的排序类型,也是默认的排序类型。它保证在设置原子变量后,该变量立即对所有其他线程可见</p>
+<h4 id="Release-Acquire-ordering"><a href="#Release-Acquire-ordering" class="headerlink" title="Release-Acquire ordering"></a>Release-Acquire ordering</h4><p><strong>释放-获取排序必须成对使用</strong>。memory_order_release -&gt; memory_order_acquire,它保证原子变量对获取该变量的线程可见</p>
+<h4 id="Relaxed-ordering"><a href="#Relaxed-ordering" class="headerlink" title="Relaxed ordering"></a>Relaxed ordering</h4><p>松散排序是最弱的排序类型,这意味着原子变量最终会对其他线程可见。但没有时间(顺序)保证。</p>
+<p>这三种排序类型代表了C++内存模型中不同级别的同步保证:</p>
+<ul>
+<li>顺序一致性提供了最强的保证,但可能带来最大的性能开销。</li>
+<li>释放-获取排序提供了一种在特定线程间建立同步点的方法,通常用于生产者-消费者模式。</li>
+<li>松散排序提供了最小的保证,但允许最大的优化空间,适用于简单的计数器等场景。</li>
+</ul>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><h4 id="memory-order-relaxed"><a href="#memory-order-relaxed" class="headerlink" title="memory_order_relaxed"></a>memory_order_relaxed</h4><p>memory_order_relaxed 是最宽松的内存序，它只保证原子性，不提供任何同步或顺序保证。这种内存序通常用于以下场景：</p>
+<ol>
+<li>计数器</li>
+<li>统计信息收集</li>
+<li>某些无锁数据结构</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;atomic&gt;</span><br><span class="line">#include &lt;thread&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">std::atomic&lt;int&gt; global_counter&#123;0&#125;;</span><br><span class="line"></span><br><span class="line">void increment_counter(int iterations) &#123;</span><br><span class="line">    for (int i = 0; i &lt; iterations; ++i) &#123;</span><br><span class="line">        // 使用 relaxed 内存序递增计数器</span><br><span class="line">        global_counter.fetch_add(1, std::memory_order_relaxed);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    const int num_threads = 10;</span><br><span class="line">    const int iterations_per_thread = 100000;</span><br><span class="line">    </span><br><span class="line">    std::vector&lt;std::thread&gt; threads;</span><br><span class="line">    </span><br><span class="line">    for (int i = 0; i &lt; num_threads; ++i) &#123;</span><br><span class="line">        threads.emplace_back(increment_counter, iterations_per_thread);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    for (auto&amp; thread : threads) &#123;</span><br><span class="line">        thread.join();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; &quot;Final counter value: &quot; &lt;&lt; global_counter.load(std::memory_order_relaxed) &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中：</p>
+<ol>
+<li><p>我们有一个全局的原子计数器 global_counter。</p>
+</li>
+<li><p>多个线程同时递增这个计数器，每个线程递增 100000 次。</p>
+</li>
+<li><p>我们使用 memory_order_relaxed 进行递增操作，因为：</p>
+<ul>
+<li><p>我们只关心最终的计数结果，不关心中间过程。</p>
+</li>
+<li><p>我们不需要这个计数器操作与其他内存操作同步。</p>
+</li>
+<li><p>我们可以容忍在程序的其他部分暂时看到旧值。</p>
+</li>
+</ul>
+</li>
+<li><p>使用 memory_order_relaxed 可能会比使用默认的 memory_order_seq_cst 有更好的性能，特别是在一些架构上。</p>
+</li>
+</ol>
+<p>这个例子展示了 memory_order_relaxed 的典型用途：当我们只需要保证操作的原子性，而不需要建立线程间的同步点时，可以使用这种内存序。这在一些高性能场景下特别有用，比如计数器、统计信息收集等，在这些场景中，我们通常只关心最终结果，而不关心中间状态。</p>
+<p>需要注意的是，虽然 memory_order_relaxed 可以提供更好的性能，但它也是最难正确使用的内存序。在使用时需要非常小心，确保程序的正确性不依赖于任何同步或顺序保证。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;atomic&gt;</span><br><span class="line">#include &lt;array&gt;</span><br><span class="line">#include &lt;thread&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">template&lt;typename T, size_t Size&gt;</span><br><span class="line">class LockFreeQueue &#123;</span><br><span class="line">private:</span><br><span class="line">    std::array&lt;T, Size&gt; buffer;</span><br><span class="line">    std::atomic&lt;size_t&gt; head&#123;0&#125;;</span><br><span class="line">    std::atomic&lt;size_t&gt; tail&#123;0&#125;;</span><br><span class="line"></span><br><span class="line">public:</span><br><span class="line">    bool push(const T&amp; value) &#123;</span><br><span class="line">        size_t current_tail = tail.load(std::memory_order_relaxed);</span><br><span class="line">        size_t next_tail = (current_tail + 1) % Size;</span><br><span class="line">        if (next_tail == head.load(std::memory_order_acquire))</span><br><span class="line">            return false;  // Queue is full</span><br><span class="line">        buffer[current_tail] = value;</span><br><span class="line">        tail.store(next_tail, std::memory_order_release);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bool pop(T&amp; value) &#123;</span><br><span class="line">        size_t current_head = head.load(std::memory_order_relaxed);</span><br><span class="line">        if (current_head == tail.load(std::memory_order_acquire))</span><br><span class="line">            return false;  // Queue is empty</span><br><span class="line">        value = buffer[current_head];</span><br><span class="line">        head.store((current_head + 1) % Size, std::memory_order_release);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">LockFreeQueue&lt;int, 100&gt; queue;</span><br><span class="line"></span><br><span class="line">void producer() &#123;</span><br><span class="line">    for (int i = 0; i &lt; 1000; ++i) &#123;</span><br><span class="line">        while (!queue.push(i)) &#123;</span><br><span class="line">            std::this_thread::yield();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void consumer() &#123;</span><br><span class="line">    int value;</span><br><span class="line">    int sum = 0;</span><br><span class="line">    for (int i = 0; i &lt; 1000; ++i) &#123;</span><br><span class="line">        while (!queue.pop(value)) &#123;</span><br><span class="line">            std::this_thread::yield();</span><br><span class="line">        &#125;</span><br><span class="line">        sum += value;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; &quot;Sum: &quot; &lt;&lt; sum &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    std::thread prod(producer);</span><br><span class="line">    std::thread cons(consumer);</span><br><span class="line"></span><br><span class="line">    prod.join();</span><br><span class="line">    cons.join();</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要的解释:</p>
+<ol>
+<li><p>在 push 函数中:</p>
+<ul>
+<li><p>我们使用 std::memory_order_acquire 来加载 head。这确保了如果队列不满,我们能看到最新的 head 值。</p>
+</li>
+<li><p>我们使用 std::memory_order_release 来存储新的 tail 值。这确保了所有之前的写操作(包括向 buffer 写入数据)在更新 tail 之前完成。</p>
+</li>
+</ul>
+</li>
+<li><p>在 pop 函数中:</p>
+<ul>
+<li><p>我们使用 std::memory_order_acquire 来加载 tail。这确保了如果队列不空,我们能看到最新的 tail 值,以及所有在 push 操作中发生的写入。</p>
+</li>
+<li><p>我们使用 std::memory_order_release 来存储新的 head 值。这确保了所有之前的读操作(包括从 buffer 读取数据)在更新 head 之前完成。</p>
+</li>
+</ul>
+</li>
+<li><p>我们仍然对 head 和 tail 的初始加载使用 std::memory_order_relaxed,因为这些操作不需要同步。</p>
+</li>
+</ol>
+<p>这种实现方式建立了正确的 release-acquire 同步对:</p>
+<ul>
+<li>生产者的 release 操作与消费者的 acquire 操作配对,确保消费者能看到生产者写入的数据。</li>
+<li>消费者的 release 操作与生产者的 acquire 操作配对,确保生产者不会覆盖尚未被消费的数据。</li>
+</ul>
+<h4 id="memory-order-acquire-memory-order-release"><a href="#memory-order-acquire-memory-order-release" class="headerlink" title="memory_order_acquire &amp; memory_order_release"></a>memory_order_acquire &amp; memory_order_release</h4><h5 id="用于非原子变量"><a href="#用于非原子变量" class="headerlink" title="用于非原子变量"></a>用于非原子变量</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int data = 0;</span><br><span class="line">std::atomic&lt;bool&gt; ready(false);</span><br><span class="line"></span><br><span class="line">// Thread 1</span><br><span class="line">void producer() &#123;</span><br><span class="line">    data = 42;                                     // A: 普通写入</span><br><span class="line">    ready.store(true, std::memory_order_release);  // B: 释放操作</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Thread 2</span><br><span class="line">void consumer() &#123;</span><br><span class="line">    while (!ready.load(std::memory_order_acquire)) &#123;&#125;  // C: 获取操作</span><br><span class="line">    assert(data == 42);                                // D: 读取 data</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>memory_order_release 的作用不仅仅局限于保证单个变量的内存一致性。它的影响范围更广，涉及到了该操作之前的所有内存写入。</p>
+<p>memory_order_release 的保证：</p>
+<p>1.写入顺序：</p>
+<ul>
+<li><p>保证 A 的写入在 B 之前完成。</p>
+</li>
+<li><p>所有在 B 之前的写入操作都不会被重排到 B 之后。</p>
+</li>
+</ul>
+<p>2.可见性：</p>
+<ul>
+<li>当其他线程通过 memory_order_acquire 观察到 B 的结果时，A 的结果也必定可见。</li>
+</ul>
+<p>3.同步关系：</p>
+<ul>
+<li>B 和 C 之间建立了同步关系。</li>
+<li>这意味着 Thread 1 中 B 之前的所有写入对 Thread 2 中 C 之后的所有读取都是可见的。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Thread 1                 Thread 2</span><br><span class="line">--------                 --------</span><br><span class="line">A: data = 42</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">B: ready.store(true)     C: ready.load()</span><br><span class="line">         |                     |</span><br><span class="line">         |   同步关系          |</span><br><span class="line">         ------------------------</span><br><span class="line">                               |</span><br><span class="line">                               v</span><br><span class="line">                        D: read data</span><br></pre></td></tr></table></figure>
+
+<p>memory_order_release 不仅限于 ready.store 操作中使用，但它确实主要用于存储（store）操作：</p>
+<p><strong>1.memory_order_release 的主要用途：</strong></p>
+<ul>
+<li><p>它主要用于原子存储操作，如 store()、exchange()、fetch_add() 等。</p>
+</li>
+<li><p>在示例中，ready.store(true, std::memory_order_release) 是一个典型用法。</p>
+</li>
+</ul>
+<p><strong>2.为什么主要用于存储操作：</strong></p>
+<ul>
+<li><p>memory_order_release 建立了一个”释放”语义，确保在这个操作之前的所有内存写入都对其他线程可见。</p>
+</li>
+<li><p>它通常与 memory_order_acquire（用于加载操作）配对使用，形成同步点。</p>
+</li>
+</ul>
+<p><strong>3.其他可能的用途：</strong></p>
+<ul>
+<li>memory_order_release 也可以用于其他类型的原子操作，如 atomic_flag::clear()。</li>
+<li>在某些复杂的同步模式中，它可能用于非存储操作，但这种用法较少见且需要谨慎。</li>
+</ul>
+<p><strong>4.不正确的用法：</strong></p>
+<ul>
+<li><p>不应在加载（load）操作中使用 memory_order_release，这是一个常见的误解。</p>
+</li>
+<li><p>例如，ready.load(std::memory_order_release) 是不正确的用法。</p>
+</li>
+</ul>
+<p><strong>5.正确的配对：</strong></p>
+<ul>
+<li>memory_order_release 通常与 memory_order_acquire 配对使用。</li>
+<li>在生产者-消费者模式中，生产者使用 release，消费者使用 acquire。</li>
+</ul>
+<h5 id="用于memory-order-relaxed"><a href="#用于memory-order-relaxed" class="headerlink" title="用于memory_order_relaxed"></a>用于memory_order_relaxed</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;int&gt; var1&#123;0&#125;;</span><br><span class="line">std::atomic&lt;int&gt; var2&#123;0&#125;;</span><br><span class="line">int non_atomic_var = 0;</span><br><span class="line"></span><br><span class="line">void thread1_atomic() &#123;</span><br><span class="line">    var1.store(1, std::memory_order_relaxed);</span><br><span class="line">    var2.store(1, std::memory_order_release);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void thread1_non_atomic() &#123;</span><br><span class="line">    non_atomic_var = 42;</span><br><span class="line">    var2.store(1, std::memory_order_release);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void thread2() &#123;</span><br><span class="line">    while (var2.load(std::memory_order_acquire) != 1) &#123;&#125;</span><br><span class="line">    // 对于 thread1_atomic:</span><br><span class="line">    std::cout &lt;&lt; &quot;Atomic var1: &quot; &lt;&lt; var1.load(std::memory_order_relaxed) &lt;&lt; std::endl;</span><br><span class="line">    // 对于 thread1_non_atomic:</span><br><span class="line">    std::cout &lt;&lt; &quot;Non-atomic var: &quot; &lt;&lt; non_atomic_var &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.使用 memory_order_relaxed 的原子操作：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var1.store(1, std::memory_order_relaxed);</span><br><span class="line">var2.store(1, std::memory_order_release);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>var1 的存储使用 memory_order_relaxed，这是最弱的内存序。</li>
+<li>memory_order_relaxed 不参与 release-acquire 语义的同步。</li>
+<li>编译器和处理器可能会重排这两个操作，因为它们之间没有依赖关系。</li>
+</ul>
+<p><strong>2.使用非原子变量：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">non_atomic_var = 42;</span><br><span class="line">var2.store(1, std::memory_order_release);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>non_atomic_var 是一个普通的非原子变量。</li>
+<li>C++ 内存模型保证所有非原子操作都会参与 release-acquire 同步。</li>
+<li>memory_order_release 保证在这个点之前的所有写操作（包括非原子操作）对其他线程可见。</li>
+</ul>
+<p><strong>关键点解析：</strong></p>
+<p>1.原子操作的独立性：</p>
+<ul>
+<li>原子操作（特别是 relaxed 操作）被设计为可以独立优化和重排。</li>
+<li>memory_order_relaxed 不提供任何跨线程的同步保证，只保证单个变量的原子性。</li>
+</ul>
+<p>2.非原子操作的保守处理：</p>
+<ul>
+<li><p>编译器和运行时必须保守地处理非原子操作，因为它们可能导致数据竞争。</p>
+</li>
+<li><p>因此，非原子写入自动参与到 release-acquire 同步中。</p>
+</li>
+</ul>
+<p>3.Release 语义的范围：</p>
+<ul>
+<li><p>memory_order_release 确保其前面的所有写操作（原子和非原子）对获取操作可见。</p>
+</li>
+<li><p>但这不包括使用 memory_order_relaxed 的独立原子操作。</p>
+</li>
+</ul>
+<p>4.同步与可见性：</p>
+<ul>
+<li><p>在非原子变量的情况下，var2 的 release 操作建立了一个同步点，保证 non_atomic_var 的写入对其他线程可见。</p>
+</li>
+<li><p>而对于 relaxed 原子操作，这个同步不会扩展到 var1。</p>
+</li>
+</ul>
+<p>5.编译器和硬件优化：</p>
+<ul>
+<li>编译器和硬件可能会更积极地优化和重排 relaxed 原子操作。</li>
+<li>非原子操作由于潜在的数据竞争风险，会受到更严格的限制。</li>
+</ul>
+<p>6.总结：</p>
+<ul>
+<li>使用 memory_order_relaxed 的原子操作不参与 release-acquire 同步，因此不能保证其可见性。</li>
+<li>非原子操作自动参与 release-acquire 同步，因此可以保证其可见性。</li>
+</ul>
+<h4 id="memory-order-acq-rel"><a href="#memory-order-acq-rel" class="headerlink" title="memory_order_acq_rel"></a>memory_order_acq_rel</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;int&gt; shared_data(0);</span><br><span class="line">std::atomic&lt;bool&gt; ready(false);</span><br><span class="line"></span><br><span class="line">void producer(int value) &#123;</span><br><span class="line">    // 准备数据</span><br><span class="line">    int local_data = value * 2;</span><br><span class="line">    </span><br><span class="line">    // 使用 memory_order_release 来发布数据</span><br><span class="line">    shared_data.store(local_data, std::memory_order_release);</span><br><span class="line">    </span><br><span class="line">    // 设置就绪标志</span><br><span class="line">    ready.store(true, std::memory_order_release);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void consumer_and_modifier() &#123;</span><br><span class="line">    // 等待数据就绪</span><br><span class="line">    while (!ready.load(std::memory_order_acquire)) &#123;</span><br><span class="line">        std::this_thread::yield();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 读取、修改并写回数据</span><br><span class="line">    int local_data = shared_data.fetch_add(10, std::memory_order_acq_rel);</span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; &quot;Consumer read: &quot; &lt;&lt; local_data </span><br><span class="line">              &lt;&lt; &quot;, after modification: &quot; &lt;&lt; local_data + 10 &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void final_reader() &#123;</span><br><span class="line">    // 读取最终结果</span><br><span class="line">    int final_value = shared_data.load(std::memory_order_acquire);</span><br><span class="line">    std::cout &lt;&lt; &quot;Final value: &quot; &lt;&lt; final_value &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.同步效果：</strong></p>
+<ul>
+<li>producer 函数使用 memory_order_release 来存储数据。</li>
+<li>consumer_and_modifier 函数首先用 memory_order_acquire 来检查 ready 标志。</li>
+<li>然后使用 memory_order_acq_rel 进行读-修改-写操作。</li>
+<li>最后，final_reader 使用 memory_order_acquire 来读取最终结果。</li>
+</ul>
+<p><strong>2.保证的顺序：</strong></p>
+<ul>
+<li>producer 的写入操作 happens-before consumer_and_modifier 的读取。</li>
+<li>consumer_and_modifier 的修改 happens-before final_reader 的读取。</li>
+<li>这样保证了整个操作序列的正确性和可见性。</li>
+</ul>
+<p><strong>3.memory_order_acq_rel 的优势：</strong></p>
+<ul>
+<li>它在单个原子操作中提供了双向同步。</li>
+<li>适用于需要看到之前的写入并确保自己的写入对后续操作可见的场景。</li>
+</ul>
+<p>在这个例子中，memory_order_acq_rel 确保了 consumer_and_modifier 能看到 producer 的写入，同时也保证其自身的修改对 final_reader 可见。这种内存序对于实现类似中间处理步骤的操作特别有用，既需要获取之前的数据，又需要发布新的数据。</p>
+<h4 id="memory-order-seq-cst"><a href="#memory-order-seq-cst" class="headerlink" title="memory_order_seq_cst"></a>memory_order_seq_cst</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;int&gt; x(0);</span><br><span class="line">std::atomic&lt;int&gt; y(0);</span><br><span class="line"></span><br><span class="line">void thread1() &#123;</span><br><span class="line">    x.store(1, std::memory_order_release);  // 使用 release 进行存储</span><br><span class="line">    int r1 = y.load(std::memory_order_seq_cst);  // 使用 seq_cst 进行加载</span><br><span class="line">    std::cout &lt;&lt; &quot;Thread 1: r1 = &quot; &lt;&lt; r1 &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void thread2() &#123;</span><br><span class="line">    y.store(1, std::memory_order_seq_cst);  // 使用 seq_cst 进行存储</span><br><span class="line">    int r2 = x.load(std::memory_order_acquire);  // 使用 acquire 进行加载</span><br><span class="line">    std::cout &lt;&lt; &quot;Thread 2: r2 = &quot; &lt;&lt; r2 &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>顺序一致性排序是最容易理解的。基本上，它忽略了CPU缓存。一旦原子变量被设置，它就在全局可见并具有全局顺序。这种方式确实会对性能产生一些影响，但除非是对性能特别敏感的地方，否则仍应使用它。</strong></p>
+<h4 id="c-默认的内存排序"><a href="#c-默认的内存排序" class="headerlink" title="c++默认的内存排序"></a>c++默认的内存排序</h4><p><strong>1.对于原子类型（std::atomic<T>）：</T></strong></p>
+<ul>
+<li>是的，C++ 标准规定，对于所有原子类型的操作，如果没有明确指定内存序，默认使用的是 memory_order_seq_cst。这包括 load、store、exchange、compare_exchange_weak、compare_exchange_strong 等操作。</li>
+</ul>
+<p><strong>2.对于非原子操作：</strong></p>
+<ul>
+<li>非原子操作不涉及内存序的概念。它们的行为由 C++ 内存模型的其他方面控制，如 happens-before 关系和数据竞争规则。</li>
+</ul>
+<p><strong>3.对于其他同步原语：</strong></p>
+<ul>
+<li>std::mutex、std::condition_variable 等同步原语内部实现了必要的同步，用户通常不需要直接处理内存序。</li>
+<li>这些同步原语提供了类似于 memory_order_seq_cst 的保证，确保了操作的可见性和顺序。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;int&gt; atomic_var(0);</span><br><span class="line">std::atomic_flag flag = ATOMIC_FLAG_INIT;</span><br><span class="line">int non_atomic_var = 0;</span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line">void thread_func() &#123;</span><br><span class="line">    // 原子操作 - 默认使用 memory_order_seq_cst</span><br><span class="line">    atomic_var.store(1);  // 等同于 atomic_var.store(1, std::memory_order_seq_cst);</span><br><span class="line">    int val = atomic_var.load();  // 等同于 atomic_var.load(std::memory_order_seq_cst);</span><br><span class="line"></span><br><span class="line">    // 原子标志 - clear() 默认使用 seq_cst，test_and_set() 默认使用 acq_rel</span><br><span class="line">    flag.clear();  // 等同于 flag.clear(std::memory_order_seq_cst);</span><br><span class="line">    bool was_set = flag.test_and_set();  // 等同于 flag.test_and_set(std::memory_order_acq_rel);</span><br><span class="line"></span><br><span class="line">    // 非原子操作 - 不涉及内存序</span><br><span class="line">    non_atomic_var = 1;</span><br><span class="line"></span><br><span class="line">    // 使用互斥锁 - 内部实现同步，用户不直接处理内存序</span><br><span class="line">    std::lock_guard&lt;std::mutex&gt; lock(mtx);</span><br><span class="line">    std::cout &lt;&lt; &quot;线程安全的输出&quot; &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子展示了：</p>
+<ul>
+<li>原子变量的 load 和 store 操作默认使用 memory_order_seq_cst。</li>
+<li>std::atomic_flag 的 clear 默认使用 memory_order_seq_cst，而 test_and_set 默认使用 memory_order_acq_rel。</li>
+<li>非原子操作不涉及内存序。</li>
+<li>互斥锁等同步原语内部处理同步，用户不需要指定内存序。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C-C/" rel="tag"># C/C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/15/Sourcetrail,-Valgrind,-QCachegrind%E5%92%8Ceasy_profiler%E5%B7%A5%E5%85%B7/" rel="prev" title="Sourcetrail, Valgrind, QCachegrind和easy_profiler工具">
+                  <i class="fa fa-angle-left"></i> Sourcetrail, Valgrind, QCachegrind和easy_profiler工具
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">desayVincent</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
